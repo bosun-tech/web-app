@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/fonts/Inter_24pt-ExtraLight.ttf') format('truetype');
+	font-weight: 100;
+}
+
+
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/fonts/Inter_18pt-Regular.ttf') format('truetype');
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/fonts/Inter_28pt-SemiBold.ttf') format('truetype');
+	font-weight: 600;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/fonts/Inter_24pt-Bold.ttf') format('truetype');
+	font-weight: 800;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/fonts/Inter_24pt-ExtraBold.ttf') format('truetype');
+	font-weight: 900;
+}
+
+
+
+@media (min-width: 920px) {
+	.slick-current img {
+		transform: scale(1.9); /* Scale the image */
+		transition: transform 0.5s ease-in-out; /* Smooth transition */
+		margin-bottom: 40px;
+	}
+
+	.slick-current {
+	margin-top: -50px;
+	}
+
+	.slick-current h3 {
+		transition: transform 0.5s ease-in-out;
+		font-size: 52px;
+		max-width: 300px;
+		margin-bottom: 20px;
+		line-height: 50px;
+	}
+
+	.slick-current p {
+		transition: transform 0.5s ease-in-out;
+		font-size: 24px;
+		max-width: 320px;
+	}
+
+
+	.slick-slide img {
+		transition: transform 0.3s ease-in-out; /* Apply smooth transition to all slides */
+	}
+	.slick-slide h3 {
+		transition: transform 0.5s ease-in-out; /* Apply smooth transition to all slides */
+	}
+
+}
