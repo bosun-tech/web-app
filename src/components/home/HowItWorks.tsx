@@ -176,7 +176,7 @@ export default function HowItWorks() {
 							))}
 						</Slider>
 					</div>
-					<div className="slider-container mt-16 md:block w-full">
+					<div className="slider-container mt-16 hidden md:block w-full">
 						<Slider {...desktopSettings}>
 							{slideInformation.map(({ image, title, description }, index) => (
 								<div
