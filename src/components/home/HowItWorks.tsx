@@ -141,7 +141,7 @@ export default function HowItWorks() {
 				</div>
 			</div>
 			<div className="p-4 relative z-30 pt-20">
-				<h2 className="text-[48px] xs:max-w-[200px] font-inter font-bold tracking-tighter px-4 leading-10 mb-4 text-white md:text-black text-center mx-auto md:font-semibold md:text-[87px] md:w-full">
+				<h2 className="how-it-works-main-title text-[48px] xs:max-w-[200px] font-inter font-bold tracking-tighter px-4 leading-10 mb-4 text-white md:text-black text-center mx-auto md:font-semibold md:text-[87px] md:w-full">
 					How It Works?
 				</h2>
 				<div>
@@ -176,7 +176,7 @@ export default function HowItWorks() {
 							))}
 						</Slider>
 					</div>
-					<div className="slider-container mt-16 hidden md:block w-full">
+					<div className="slider-container mt-16 md:block w-full">
 						<Slider {...desktopSettings}>
 							{slideInformation.map(({ image, title, description }, index) => (
 								<div
@@ -195,10 +195,16 @@ export default function HowItWorks() {
 											{index + 1}.
 										</h3>
 										<div className="flex flex-col items-center">
-											<h3 className="font-semibold font-inter text-[30px] text-center max-w-[220px] mx-auto leading-10">
+											<h3
+												className="test font-semibold font-inter text-[30px] text-center max-w-[220px] mx-auto leading-10"
+												data-test={`slide-title-${index}`}
+											>
 												{title}
 											</h3>
-											<p className="text-gray-600 max-w-[220px] text-center mx-auto font-normal mt-2">
+											<p
+												className="text-gray-600 max-w-[220px] text-center mx-auto font-normal mt-2"
+												data-test={`slide-description-${index}`}
+											>
 												{description}
 											</p>
 										</div>

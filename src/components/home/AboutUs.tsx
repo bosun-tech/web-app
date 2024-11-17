@@ -60,7 +60,7 @@ export default function AboutUs() {
 			</div>
 			<div className="flex flex-col items-center justify-center md:justify-start p-4 md:flex-row md:p-8 z-20 relative pt-16 md:w-full">
 				<div className="flex flex-col items-center md:items-center xs:text-center md:pr-8 mx-auto">
-					<h2 className="text-5xl font-bold mb-4 text-white md:text-black md:text-[83px] md:font-semibold md:w-full md:pb-[50px] md:mx-auto">
+					<h2 className="about-us-main-title text-5xl font-bold mb-4 text-white md:text-black md:text-[83px] md:font-semibold md:w-full md:pb-[50px] md:mx-auto">
 						About Us
 					</h2>
 					<div className="flex justify-center xs:w-1/2 md:w-1/2 md:justify-end md:hidden">
@@ -70,8 +70,8 @@ export default function AboutUs() {
 							className="w-full max-w-md h-auto object-cover filter drop-shadow-[0_10px_8px_rgba(0,0,0,0.1)] drop-shadow-[0_4px_3px_rgba(0,0,0,0)]"
 						/>
 					</div>
-					<div className="md:flex md:flex-row md:w-full justify-start align-center content-center mx-auto">
-						<p className="text-gray-700 my-4 px-8 md:px-0 text-[14px] font-inter font-normal md:max-w-[493px] md:pb-[50px] md:text-[18.5px]">
+					<div className="test md:flex md:flex-row md:w-full justify-start align-center content-center mx-auto">
+						<p className="about-us-main-paragraph-text text-gray-700 my-4 px-8 md:px-0 text-[14px] font-inter font-normal md:max-w-[493px] md:pb-[50px] md:text-[18.5px]">
 							At <b>Bosun</b>, we make it easy to connect with the Stellar
 							network. Our platform lets you find and interact with trusted
 							Stellar anchors, on-ramp and off-ramp funds, and manage your
@@ -80,11 +80,15 @@ export default function AboutUs() {
 							explore the world of decentralized finance.
 						</p>
 						<div className=" md:w-[50%] hidden lg:block min-w-[350px] max-w-[522px] mt-[-60px]">
-							<img src={people} alt="" className="w-full" />
+							<img
+								src={people}
+								alt=""
+								className="about-us-people-image w-full"
+							/>
 						</div>
 					</div>
 					<div className="md:w-full md:flex md:justify-end">
-						<p className="text-gray-700  px-8 text-[14px] font-inter font-normal md:text-right md:max-w-[613px]  md:text-[18.5px] md:px-0">
+						<p className="about-us-secondary-paragraph-text text-gray-700 px-8 text-[14px] font-inter font-normal md:text-right md:max-w-[613px]  md:text-[18.5px] md:px-0">
 							<b>Join us</b> as we bridge the gap between traditional finance
 							and the Stellar network, making it easier than ever to operate in
 							the world of decentralized finance.

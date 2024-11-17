@@ -124,7 +124,7 @@ export default function FAQ() {
 			<section className="py-10 sm:py-16 lg:py-24 relative z-30 md:w-full">
 				<div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
 					<div className="max-w-2xl mx-auto text-center md:mx-0 ">
-						<h2 className="font-semibold font-inter text-[32px] leading-tighter leading-7 text-white sm:text-4xl pt-14 md:text-[40px] md:text-black md:text-left md:w-full">
+						<h2 className="faq-main-title font-semibold font-inter text-[32px] leading-tighter leading-7 text-white sm:text-4xl pt-14 md:text-[40px] md:text-black md:text-left md:w-full">
 							Frequently asked questions
 						</h2>
 					</div>
@@ -145,7 +145,9 @@ export default function FAQ() {
 									onClick={() => handleToggle(index)}
 									className="flex items-center justify-between w-full px-6 py-5 sm:px-6 sm:py-6"
 								>
-									<span className="text-[16px] font-semibold font-inter text-black text-start ">
+									<span
+										className={`question-${index} text-[16px] font-semibold font-inter text-black text-start`}
+									>
 										{question}
 									</span>
 									{openIndex === index ? (
@@ -162,7 +164,9 @@ export default function FAQ() {
 									}`}
 									style={{ transitionProperty: 'max-height, opacity' }}
 								>
-									<p className="text-[16px] font-inter font-normal text-gray-600">
+									<p
+										className={`answer-${index} text-[16px] font-inter font-normal text-gray-600`}
+									>
 										{answer}
 									</p>
 								</div>

@@ -77,6 +77,7 @@ const followUsSection = [
 		logo: instagramLogo,
 	},
 ];
+
 export default function Footer() {
 	return (
 		<footer className="bg-black md:bg-transparent text-white md:text-black p-8 md:px-[4%] md:border-t-[1px] md:border-gray-100">
@@ -85,6 +86,7 @@ export default function Footer() {
 					<div className="flex flex-col items-start space-y-4 lg:hid">
 						{/* <img src={bosunLogo} alt="Logo Compañía" className="w-32 h-auto" /> */}
 						<svg
+							className="bosun-footer-logo"
 							width="122"
 							height="28"
 							viewBox="0 0 122 28"
@@ -242,9 +244,11 @@ export default function Footer() {
 						</h4>
 						<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 							{resourcesSection.map(({ title, route }, index) => (
-								<a href={route} key={index}>
-									<li key={index}>{title}</li>
-								</a>
+								<li key={index}>
+									<a href={route} key={index}>
+										{title}
+									</a>
+								</li>
 							))}
 						</ul>
 					</div>
@@ -257,9 +261,11 @@ export default function Footer() {
 						</h4>
 						<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 							{connectSection.map(({ title, route }, index) => (
-								<a href={route} key={index}>
-									<li key={index}>{title}</li>
-								</a>
+								<li key={index}>
+									<a href={route} key={index}>
+										{title}
+									</a>
+								</li>
 							))}
 						</ul>
 					</div>
@@ -270,9 +276,11 @@ export default function Footer() {
 						</h4>
 						<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 							{exploreSection.map(({ title, route }, index) => (
-								<a href={route} key={index}>
-									<li key={index}>{title}</li>
-								</a>
+								<li key={index}>
+									<a href={route} key={index}>
+										{title}
+									</a>
+								</li>
 							))}
 						</ul>
 					</div>
@@ -410,9 +418,15 @@ export default function Footer() {
 					</h4>
 					<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 						{resourcesSection.map(({ title, route }, index) => (
-							<a href={route} key={index}>
-								<li key={index}>{title}</li>
-							</a>
+							<li key={index}>
+								<a
+									href={route}
+									key={index}
+									data-test={`footer-resources-section-${index}`}
+								>
+									{title}
+								</a>
+							</li>
 						))}
 					</ul>
 				</div>
@@ -423,9 +437,15 @@ export default function Footer() {
 					</h4>
 					<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 						{connectSection.map(({ title, route }, index) => (
-							<a href={route} key={index}>
-								<li key={index}>{title}</li>
-							</a>
+							<li key={index}>
+								<a
+									href={route}
+									key={index}
+									data-test={`footer-connect-section-${index}`}
+								>
+									{title}
+								</a>
+							</li>
 						))}
 					</ul>
 				</div>
@@ -435,9 +455,15 @@ export default function Footer() {
 					</h4>
 					<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 						{exploreSection.map(({ title, route }, index) => (
-							<a href={route} key={index}>
-								<li key={index}>{title}</li>
-							</a>
+							<li key={index}>
+								<a
+									href={route}
+									key={index}
+									data-test={`footer-explore-section-${index}`}
+								>
+									{title}
+								</a>
+							</li>
 						))}
 					</ul>
 				</div>
@@ -448,18 +474,21 @@ export default function Footer() {
 					</h4>
 					<ul className="flex flex-col gap-2 font-inter font-normal text-[16px]">
 						{followUsSection.map(({ title, route, logo }, index) => (
-							<a
-								href={route}
-								key={index}
-								className="flex flex-row gap-4 items-center"
-							>
-								<img
-									src={logo}
-									alt={title}
-									className="w-4 h-4 brightness-0 saturate-100"
-								/>
-								<li key={index}>{title}</li>
-							</a>
+							<li key={index}>
+								<a
+									href={route}
+									key={index}
+									className="flex flex-row gap-4 items-center"
+									data-test={`footer-follow-us-section-${index}`}
+								>
+									<img
+										src={logo}
+										alt={title}
+										className="w-4 h-4 brightness-0 saturate-100"
+									/>
+									{title}
+								</a>
+							</li>
 						))}
 					</ul>
 				</div>

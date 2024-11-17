@@ -47,6 +47,7 @@ export default function Header() {
 		>
 			<a href="/">
 				<svg
+					className="bosun-logo-header"
 					width="122"
 					height="28"
 					viewBox="0 0 122 28"
@@ -209,12 +210,6 @@ export default function Header() {
 								</li>
 								{/* <li className="font-inter font-normal text-[16px] text-white">
 									<a href="/platform">Platform</a>
-								</li>
-								<li className="font-inter font-normal text-[16px] text-white">
-									<a href="/contact-us">Language</a>
-								</li>
-								<li className="font-inter font-normal text-[16px] text-white">
-									<a href="/contact-us">Account</a>
 								</li> */}
 								<li className="font-inter font-normal text-[16px] text-white">
 									<a href="/contact-us">Contact Us</a>
@@ -226,18 +221,22 @@ export default function Header() {
 				<div className="hidden space-x-8 lg:flex flex-row justify-between items-center">
 					<ul className="space-x-8 font-[14px] font-bold flex flex-row justify-between items-center">
 						<li className="hover:text-[#2194F2]">
-							<a href="/">Home</a>
+							<a href="/" className="home-header">
+								Home
+							</a>
 						</li>
 						{/* <li className="hover:text-[#2194F2] ">
 							<a href="/platform">Platform</a>
 						</li> */}
 						<li className="hover:text-[#2194F2]">
-							<a href="/contact-us">Contact Us</a>
+							<a href="/contact-us" className="contact-us-header">
+								Contact Us
+							</a>
 						</li>
 					</ul>
 					<div className="flex flex-row justify-between items-center space-x-3">
 						<button
-							className="bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl cursor-pointer"
+							className="connect-button-header bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl cursor-pointer"
 							onClick={session.handleConnect}
 						>
 							{session.publicKey
@@ -255,7 +254,7 @@ export default function Header() {
 								/>
 							</button>
 						) : null}
-						<button className="bg-[#F0F2F5] hover:bg-[#AAAAAA] p-3 group rounded-xl cursor-not-allowed">
+						<button className="language-button-header bg-[#F0F2F5] hover:bg-[#AAAAAA] p-3 group rounded-xl cursor-not-allowed">
 							<GlobeAltIcon
 								className="w-[20px] h-[20px] text-[#404040] group-hover:text-white "
 								strokeWidth={2}
