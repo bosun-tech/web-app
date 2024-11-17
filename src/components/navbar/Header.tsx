@@ -208,6 +208,28 @@ export default function Header() {
 								<li className="font-inter font-normal text-[16px] text-white">
 									<a href="/platform">Home</a>
 								</li>
+								<li className="font-inter font-normal text-[16px]">
+									<button
+										className="connect-button-header bg-white hover:bg-white text-[#2194F2] font-bold py-2 px-4 rounded-xl cursor-pointer"
+										onClick={
+											session.publicKey ? undefined : session.handleConnect
+										}
+									>
+										{session.publicKey
+											? getShortedStellarKey(session.publicKey)
+											: 'Connect'}
+									</button>
+								</li>
+								{session.publicKey ? (
+									<li className="font-inter font-normal text-[16px]">
+										<button
+											className="bg-[#F0F2F5] hover:bg-[#AAAAAA] text-[#2194F2] font-bold py-2 px-6 rounded-xl"
+											onClick={session.handleDisconnect}
+										>
+											Disconnect
+										</button>
+									</li>
+								) : null}
 								{/* <li className="font-inter font-normal text-[16px] text-white">
 									<a href="/platform">Platform</a>
 								</li> */}
