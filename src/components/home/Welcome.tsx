@@ -38,9 +38,12 @@ export default function Welcome() {
 						<button className="bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl w-full md:w-auto mt-4 text-[20px]	font-inter font-semibold h-12	mt-8 md:hidden">
 							Start Exploring
 						</button>
-						<button className="start-exploring-anchors bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-xl w-full md:w-auto mt-4 text-[20px]	font-inter font-semibold h-12	mt-8 hidden md:block">
+						<a
+							href="/platform"
+							className="start-exploring-anchors bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-xl w-full md:w-auto mt-4 text-[20px]	font-inter font-semibold h-12	mt-8 hidden md:block"
+						>
 							Start Exploring Anchors
-						</button>
+						</a>
 					</div>
 				</div>
 				<img
