@@ -145,7 +145,7 @@ describe('Home page', () => {
 		cy.get('.bosun-logo-header').should('exist');
 		cy.get('.home-header').contains('Home');
 		cy.get('.contact-us-header').contains('Contact Us');
-		cy.get('.connect-button-header').contains('Connect');
+		cy.get('#connect-button-header').contains('Connect');
 		cy.get('.language-button-header').should('exist');
 	});
 
