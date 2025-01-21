@@ -4,6 +4,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
+import { getShortedStellarKey } from '@/common/getShortedStellarKey';
+import Button from '@/components/Button';
 import { useSimpleSignerProvider } from '@/hooks/auth/useSimpleSignerProvider';
 
 export default function Header() {
@@ -13,26 +15,18 @@ export default function Header() {
 
 	const session = useSimpleSignerProvider();
 
-	const controlNavbar = () => {
-		if (typeof window !== 'undefined') {
-			if (window.scrollY > lastScrollY) {
-				setShow(false);
-			} else {
-				setShow(true);
-			}
-
-			setLastScrollY(window.scrollY);
-		}
-	};
-
-	function getShortedStellarKey(string: string): string {
-		return string.slice(0, 4).concat('...').concat(string.substr(-4));
-	}
-
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
-			window.addEventListener('scroll', controlNavbar);
+			const controlNavbar = () => {
+				if (window.scrollY > lastScrollY) {
+					setShow(false);
+				} else {
+					setShow(true);
+				}
+				setLastScrollY(window.scrollY);
+			};
 
+			window.addEventListener('scroll', controlNavbar);
 			return () => {
 				window.removeEventListener('scroll', controlNavbar);
 			};
@@ -206,33 +200,35 @@ export default function Header() {
 							</h3>
 							<ul className="flex flex-col items-center space-y-4">
 								<li className="font-inter font-normal text-[16px] text-white">
-									<a href="/platform">Home</a>
+									<a href="/">Home</a>
+								</li>
+								<li className="font-inter font-normal text-[16px] text-white">
+									<a href="/platform">Platform</a>
 								</li>
 								<li className="font-inter font-normal text-[16px]">
-									<button
-										className="connect-button-header bg-white hover:bg-white text-[#2194F2] font-bold py-2 px-4 rounded-xl cursor-pointer"
+									<Button
+										id="connect-button-header"
+										label={
+											session.publicKey
+												? getShortedStellarKey(session.publicKey)
+												: 'Connect'
+										}
 										onClick={
 											session.publicKey ? undefined : session.handleConnect
 										}
-									>
-										{session.publicKey
-											? getShortedStellarKey(session.publicKey)
-											: 'Connect'}
-									</button>
+										width="auto"
+									/>
 								</li>
-								{session.publicKey ? (
+								{session.publicKey && (
 									<li className="font-inter font-normal text-[16px]">
-										<button
-											className="bg-[#F0F2F5] hover:bg-[#AAAAAA] text-[#2194F2] font-bold py-2 px-6 rounded-xl"
+										<Button
+											id="disconnect-button-header"
+											label="Disconnect"
 											onClick={session.handleDisconnect}
-										>
-											Disconnect
-										</button>
+											width="auto"
+										/>
 									</li>
-								) : null}
-								{/* <li className="font-inter font-normal text-[16px] text-white">
-									<a href="/platform">Platform</a>
-								</li> */}
+								)}
 								<li className="font-inter font-normal text-[16px] text-white">
 									<a href="/contact-us">Contact Us</a>
 								</li>
@@ -247,9 +243,9 @@ export default function Header() {
 								Home
 							</a>
 						</li>
-						{/* <li className="hover:text-[#2194F2] ">
+						<li className="hover:text-[#2194F2] ">
 							<a href="/platform">Platform</a>
-						</li> */}
+						</li>
 						<li className="hover:text-[#2194F2]">
 							<a href="/contact-us" className="contact-us-header">
 								Contact Us
@@ -257,28 +253,31 @@ export default function Header() {
 						</li>
 					</ul>
 					<div className="flex flex-row justify-between items-center space-x-3">
-						<button
-							className="connect-button-header bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl cursor-pointer"
+						<Button
+							id="connect-button-header"
+							label={
+								session.publicKey
+									? getShortedStellarKey(session.publicKey)
+									: 'Connect'
+							}
 							onClick={session.handleConnect}
-						>
-							{session.publicKey
-								? getShortedStellarKey(session.publicKey)
-								: 'Connect'}
-						</button>
-						{session.publicKey ? (
+							width="auto"
+						/>
+						{session.publicKey && (
 							<button
+								id="disconnect-button-header"
 								className="bg-[#F0F2F5] hover:bg-[#AAAAAA] p-3 group rounded-xl"
 								onClick={session.handleDisconnect}
 							>
 								<ArrowLeftStartOnRectangleIcon
-									className="w-[20px] h-[20px] text-[#404040] group-hover:text-white "
+									className="w-[20px] h-[20px] text-[#404040] group-hover:text-white"
 									strokeWidth={2}
 								/>
 							</button>
-						) : null}
+						)}
 						<button className="language-button-header bg-[#F0F2F5] hover:bg-[#AAAAAA] p-3 group rounded-xl cursor-not-allowed">
 							<GlobeAltIcon
-								className="w-[20px] h-[20px] text-[#404040] group-hover:text-white "
+								className="w-[20px] h-[20px] text-[#404040] group-hover:text-white"
 								strokeWidth={2}
 							/>
 						</button>
