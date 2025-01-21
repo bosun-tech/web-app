@@ -12,6 +12,7 @@ import SignUp from '@/pages/auth/SignUp';
 import Root from '@pages/Root';
 import About from '@pages/about/About';
 import Home from '@pages/home/Home';
+import Platform from '@pages/platform/Platform';
 
 const authentication: RouteObject[] = [
 	{
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
 				index: true,
 				path: '/',
 				element: <Home />,
+			},
+			{
+				path: '/platform',
+				element: <Platform />,
 			},
 			{
 				path: '/about',

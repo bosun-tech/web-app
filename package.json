@@ -36,6 +36,7 @@
 		"dotenv": "^16.4.5",
 		"formik": "^2.4.5",
 		"jwt-decode": "^4.0.0",
+		"motion": "^11.18.1",
 		"react": "^18.2.0",
 		"react-cookie": "^7.1.4",
 		"react-dom": "^18.2.0",
