@@ -1,5 +1,8 @@
 describe('Platform Page', () => {
 	beforeEach(() => {
+		cy.window().then((win) => {
+			win.localStorage.setItem('publicKey', 'mock-public-key');
+		});
 		cy.visit('/platform');
 	});
 	describe('Platform Title', () => {
@@ -13,7 +16,7 @@ describe('Platform Page', () => {
 			cy.get('#country-selector').should('exist');
 			cy.get('label').should('contain.text', 'Select a country');
 
-			cy.get('#email-service-selector').should('exist');
+			cy.get('#anchor-service-selector').should('exist');
 			cy.get('label').should('contain.text', 'Select an anchor');
 
 			cy.get('#operation-selector').should('exist');
@@ -28,10 +31,10 @@ describe('Platform Page', () => {
 		});
 
 		it('Should open anchor selector and select an anchor', () => {
-			cy.get('#email-service-selector').click();
+			cy.get('#anchor-service-selector').click();
 			cy.get('input[type="search"]').type('Anclap');
 			cy.contains('Anclap').click();
-			cy.get('#email-service-selector').should('contain.text', 'Anclap');
+			cy.get('#anchor-service-selector').should('contain.text', 'Anclap');
 		});
 
 		it('Should open operation selector and select an operation', () => {
@@ -50,7 +53,7 @@ describe('Platform Page', () => {
 			});
 
 			it('Should filter anchor options when searching', () => {
-				cy.get('#email-service-selector').click();
+				cy.get('#anchor-service-selector').click();
 				cy.get('input[type="search"]').type('Myk');
 				cy.get('li').should('have.length.greaterThan', 0);
 				cy.get('li').should('contain.text', 'Mykobo');
@@ -65,21 +68,296 @@ describe('Platform Page', () => {
 		});
 	});
 
-	describe('Continue Button', () => {
-		it('Should display a disabled Continue button when not connected', () => {
-			cy.get('button').contains('Continue').should('be.disabled');
+	describe('Authorization Modal', () => {
+		beforeEach(() => {
+			cy.get('#continue-button').click();
+		});
+
+		it('Should display the authorization modal with correct title and text', () => {
+			cy.get('h1').should('contain.text', 'We need your authorization');
+			cy.get('p').should(
+				'contain.text',
+				'To connect with the Anchor, we need your authorization. A pop-up will appear for you to approve and continue.',
+			);
+		});
+
+		it('Should display the authorization image', () => {
+			cy.get('img[alt="Authorization illustration"]').should('be.visible');
+		});
+
+		it('Should have a working Got it button', () => {
+			cy.window().then((win) => {
+				win.localStorage.setItem('publicKey', 'mock-public-key');
+			});
+			cy.get('#got-it-button')
+				.should('be.visible')
+				.and('contain.text', 'Got it')
+				.click();
+			cy.get('h1').should('contain.text', 'Deposit');
 		});
 	});
 
-	describe('Responsive Layout', () => {
-		it('Should display correctly on desktop', () => {
-			cy.viewport(1024, 768);
-			cy.get('.md\\:w-1\\/2').should('be.visible');
+	describe('Deposit Flow', () => {
+		beforeEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.setItem('publicKey', 'mock-public-key');
+			});
 		});
 
-		it('Should display correctly on mobile', () => {
-			cy.viewport(375, 812);
-			cy.get('.w-full').should('be.visible');
+		afterEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+		});
+
+		it('Should redirect to platform page when not authenticated', () => {
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+			cy.visit('/platform/deposit');
+			cy.url().should('include', '/platform');
+		});
+
+		it('Should redirect to platform page when user logs out', () => {
+			cy.visit('/platform/deposit');
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+			cy.url().should('include', '/platform');
+		});
+
+		it('Should display the initial deposit form when authenticated', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+
+			cy.get('[data-testid="deposit-form-container"]').should('be.visible');
+			cy.get('[data-testid="deposit-title"]').should('contain.text', 'Deposit');
+			cy.get('#deposit-interface-selector').should('be.visible');
+		});
+
+		it('Should show additional fields after clicking continue', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+			cy.get('#deposit-continue-button').click();
+
+			cy.get('#deposit-interface-selector').click();
+			cy.get('input[type="search"]').type('Anclap');
+			cy.contains('Anclap UI').click();
+			cy.get('#deposit-interface-selector').should('contain.text', 'Anclap UI');
+
+			cy.get('[data-testid="public-key-input"]').type(
+				'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+			);
+			cy.get('[data-testid="public-key-input"]').should(
+				'have.value',
+				'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+			);
+
+			cy.get('[data-testid="memo-input"]').type('Test memo');
+			cy.get('[data-testid="memo-input"]').should('have.value', 'Test memo');
+
+			cy.get('[data-testid="email-input"]').type('test@example.com');
+			cy.get('[data-testid="email-input"]').should(
+				'have.value',
+				'test@example.com',
+			);
+			cy.get('#deposit-continue-button').click();
+		});
+
+		it('Should show error when public key is empty', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+			cy.get('#deposit-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').focus().blur();
+			cy.get('#deposit-continue-button').click();
+			cy.get('[data-testid="public-key-error"]').should(
+				'contain.text',
+				'Public key is required',
+			);
+			cy.get('[data-testid="deposit-instructions"]').should('not.exist');
+		});
+
+		it('Should show error when public key does not start with G', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+			cy.get('#deposit-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('A'.repeat(56));
+			cy.get('[data-testid="public-key-error"]').should(
+				'contain.text',
+				'Public key must start with G',
+			);
+			cy.get('#deposit-continue-button').click();
+			cy.get('[data-testid="deposit-instructions"]').should('not.exist');
+		});
+
+		it('Should show error when public key is not 56 characters', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+			cy.get('#deposit-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('G'.repeat(55));
+			cy.get('[data-testid="public-key-error"]').should(
+				'contain.text',
+				'Public key must be 56 characters long',
+			);
+			cy.get('#deposit-continue-button').click();
+			cy.get('[data-testid="deposit-instructions"]').should('not.exist');
+		});
+
+		it('Should show red border when public key is invalid', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+			cy.get('#deposit-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('invalid');
+			cy.get('[data-testid="public-key-input"]').should(
+				'have.class',
+				'border-red-500',
+			);
+		});
+
+		it('Should accept valid public key and allow form submission', () => {
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+			cy.get('#deposit-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('G'.repeat(56));
+			cy.get('[data-testid="public-key-error"]').should('not.exist');
+			cy.get('[data-testid="public-key-input"]').should(
+				'not.have.class',
+				'border-red-500',
+			);
+			cy.get('#deposit-continue-button').click();
+			cy.get('[data-testid="deposit-instructions"]').should('exist');
+		});
+
+		describe('Deposit Instructions', () => {
+			beforeEach(() => {
+				cy.get('#continue-button').click();
+				cy.get('#got-it-button').click();
+				cy.get('#deposit-continue-button').click();
+
+				cy.get('[data-testid="public-key-input"]').type(
+					'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+				);
+
+				cy.get('#deposit-continue-button').click();
+			});
+
+			it('Should display deposit instructions after form submission', () => {
+				cy.get('[data-testid="deposit-instructions"]').should('be.visible');
+				cy.get('[data-testid="instructions-title"]').should(
+					'contain.text',
+					'Deposit Instructions',
+				);
+
+				cy.get('[data-testid="transaction-id"]').should(
+					'contain.text',
+					'abcd1234efgh5678',
+				);
+				cy.get('[data-testid="estimated-time"]').should(
+					'contain.text',
+					'5 minutes',
+				);
+				cy.get('[data-testid="amount"]').should('contain.text', '100,000');
+
+				cy.get('[data-testid="bank-info"]').should(
+					'contain.text',
+					'Make a payment to Bank: 121122676 Account: 887765458',
+				);
+				cy.get('[data-testid="account-number"]').should(
+					'contain.text',
+					'887765458',
+				);
+			});
+		});
+
+		describe('Anchor Info Section', () => {
+			beforeEach(() => {
+				cy.get('#continue-button').click();
+				cy.get('#got-it-button').click();
+				cy.get('#deposit-continue-button').click();
+
+				cy.get('[data-testid="public-key-input"]').type(
+					'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+				);
+
+				cy.get('#deposit-continue-button').click();
+			});
+
+			it('Should display anchor logo and name correctly', () => {
+				cy.get('[data-testid="anchor-info-container"] img')
+					.should(
+						'have.attr',
+						'src',
+						'https://home.anclap.com/wp-content/uploads/2023/01/Ico.svg',
+					)
+					.and('have.attr', 'alt', 'Anclap logo')
+					.and('have.class', 'w-12')
+					.and('have.class', 'h-12')
+					.and('have.class', 'rounded-lg');
+				cy.get('[data-testid="anchor-info-container"]')
+					.find('h3')
+					.should('contain.text', 'Anclap');
+			});
+
+			it('Should display countries correctly', () => {
+				cy.viewport(1024, 768);
+				cy.get('[data-testid="anchor-info-container"]')
+					.find('p')
+					.first()
+					.should(
+						'contain.text',
+						'Argentina / Chile / Colombia / Mexico / Peru',
+					);
+			});
+
+			it('Should display all info sections with correct data', () => {
+				cy.viewport(1024, 768);
+				cy.get('[data-testid="anchor-info-container"]').within(() => {
+					cy.contains('Description')
+						.next()
+						.should('contain.text', 'Best rates, best service');
+					cy.contains('Crypto Assets')
+						.next()
+						.should('contain.text', 'ARS, PEN, USDC, XLM');
+					cy.contains('Fiat Assets')
+						.next()
+						.should('contain.text', '$ARS, $USD');
+					cy.contains('Payment Rails')
+						.next()
+						.should('contain.text', 'Cash, Card, Bank Transfer, Local Method');
+				});
+			});
+
+			it('Should have correct styling for info cards', () => {
+				cy.viewport(1024, 768);
+				cy.get('[data-testid="anchor-info-container"]').within(() => {
+					cy.get('.bg-white')
+						.first()
+						.should('have.class', 'rounded-2xl')
+						.and('have.class', 'shadow-lg')
+						.and('have.class', 'p-6')
+						.and('have.class', 'mb-4');
+
+					cy.get('.bg-white')
+						.last()
+						.should('have.class', 'rounded-2xl')
+						.and('have.class', 'shadow-lg')
+						.and('have.class', 'p-6');
+				});
+			});
+
+			it('Should have correct text styling for sections', () => {
+				cy.viewport(1024, 768);
+				cy.get('[data-testid="anchor-info-container"]').within(() => {
+					cy.get('h3.font-medium').should('have.class', 'text-gray-500');
+					cy.get('p.text-gray-900').should('exist');
+					cy.get('h3.text-xl').should('have.class', 'font-bold');
+				});
+			});
 		});
 	});
 });
