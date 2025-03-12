@@ -1,7 +1,7 @@
-import squareBlue from '@/assets/square-blue.png';
-import squareYellow from '@/assets/square-yellow.png';
+import squareBlue from '@/assets/home/square-blue.png';
+import squareYellow from '@/assets/home/square-yellow.png';
 
-import bosunLogo from '@assets/coins.png';
+import bosunLogo from '@assets/home/coins.png';
 
 export default function Welcome() {
 	return (

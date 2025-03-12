@@ -2,7 +2,7 @@ import Wave from 'react-wavify';
 
 import people from '@/assets/about-us/people.png';
 import sittingMan from '@/assets/about-us/sitting-man.png';
-import springYellowViolet from '@/assets/spring-yellow-violet.png';
+import springYellowViolet from '@/assets/home/spring-yellow-violet.png';
 
 export default function AboutUs() {
 	return (

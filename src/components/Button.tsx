@@ -4,6 +4,7 @@ type ButtonProps = {
 	onClick?: () => void;
 	disabled?: boolean;
 	width?: 'full' | 'auto' | 'fit';
+	dataTest?: string;
 };
 
 export default function Button({
@@ -12,6 +13,7 @@ export default function Button({
 	onClick,
 	disabled = false,
 	width = 'auto',
+	dataTest,
 }: ButtonProps) {
 	const widthClasses = {
 		full: 'w-full',
@@ -22,6 +24,7 @@ export default function Button({
 	return (
 		<button
 			id={id}
+			data-test={dataTest}
 			className={`${widthClasses[width]} bg-[#2194F2] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
 			onClick={onClick}
 			disabled={disabled}

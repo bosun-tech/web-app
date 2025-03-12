@@ -3,23 +3,22 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Footer from '@/components/home/Footer';
+import Header from '@/components/navbar/Header';
 import { SimpleSignerProvider } from '@/context/SimpleSignerContext';
-
-import Header from '@components/navbar/Header.tsx';
 
 export default function Root() {
 	return (
-		<>
-			<SimpleSignerProvider>
+		<SimpleSignerProvider>
+			<div className="flex flex-col min-h-screen">
 				<Header />
-				<div id="pages" className="flex flex-col flex-1">
+				<main className="flex-grow">
 					<Outlet />
-				</div>
-			</SimpleSignerProvider>
+				</main>
+				<Footer />
+			</div>
 			<div data-test="toast-container">
 				<ToastContainer data-test="toast-container" />
 			</div>
-			<Footer />
-		</>
+		</SimpleSignerProvider>
 	);
 }

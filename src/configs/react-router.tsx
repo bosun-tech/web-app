@@ -1,47 +1,31 @@
 import { RouteObject, createBrowserRouter } from 'react-router-dom';
 
 import RequireAuth from '@/components/auth/RequireAuth';
-import ConfirmPassword from '@/pages/auth/ConfirmPassword';
-import ConfirmUser from '@/pages/auth/ConfirmUser';
-import ForgotPassword from '@/pages/auth/ForgotPassword';
-import ResendConfirmationCode from '@/pages/auth/ResendConfirmationCode';
-import SignIn from '@/pages/auth/SignIn';
-import SignOut from '@/pages/auth/SignOut';
-import SignUp from '@/pages/auth/SignUp';
+import RequirePlatformAuth from '@/components/auth/RequirePlatformAuth';
+import PlatformAuthorization from '@/pages/platform/PlatformAuthorization';
+import PlatformDeposit from '@/pages/platform/PlatformDeposit';
+import PlatformForm from '@/pages/platform/PlatformForm';
 
 import Root from '@pages/Root';
 import About from '@pages/about/About';
 import Home from '@pages/home/Home';
-import Platform from '@pages/platform/Platform';
 
-const authentication: RouteObject[] = [
+const platform: RouteObject[] = [
 	{
-		path: '/auth/sign-in',
-		element: <SignIn />,
+		path: '/platform',
+		element: <PlatformForm />,
 	},
 	{
-		path: '/auth/sign-up',
-		element: <SignUp />,
+		path: '/platform/auth',
+		element: <PlatformAuthorization />,
 	},
 	{
-		path: '/auth/confirm-user',
-		element: <ConfirmUser />,
-	},
-	{
-		path: '/auth/confirm-password',
-		element: <ConfirmPassword />,
-	},
-	{
-		path: '/auth/resend-confirmation-code',
-		element: <ResendConfirmationCode />,
-	},
-	{
-		path: '/auth/forgot-password',
-		element: <ForgotPassword />,
-	},
-	{
-		path: '/auth/sign-out',
-		element: <SignOut />,
+		path: '/platform/deposit',
+		element: (
+			<RequirePlatformAuth>
+				<PlatformDeposit />
+			</RequirePlatformAuth>
+		),
 	},
 ];
 
@@ -56,10 +40,6 @@ const router = createBrowserRouter([
 				element: <Home />,
 			},
 			{
-				path: '/platform',
-				element: <Platform />,
-			},
-			{
 				path: '/about',
 				element: (
 					<RequireAuth>
@@ -67,7 +47,7 @@ const router = createBrowserRouter([
 					</RequireAuth>
 				),
 			},
-			...authentication,
+			...platform,
 		],
 	},
 ]);

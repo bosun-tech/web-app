@@ -11,8 +11,8 @@ import {
 	step4,
 	step5,
 } from '@/assets/carousel/index.ts';
-import diamondBlue from '@/assets/diamond-blue.png';
-import springYellowViolet from '@/assets/spring-yellow-violet.png';
+import diamondBlue from '@/assets/home/diamond-blue.png';
+import springYellowViolet from '@/assets/home/spring-yellow-violet.png';
 
 export default function HowItWorks() {
 	const slideInformation = [

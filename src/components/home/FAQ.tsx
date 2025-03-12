@@ -2,8 +2,8 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import Wave from 'react-wavify';
 
-import diamondBlue from '@/assets/diamond-blue.png';
-import squareBlue from '@/assets/square-blue.png';
+import diamondBlue from '@/assets/home/diamond-blue.png';
+import squareBlue from '@/assets/home/square-blue.png';
 
 interface FAQItem {
 	question: string;
