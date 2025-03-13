@@ -8,6 +8,7 @@ import {
 	ANCHORS as anchorOptions,
 	OPERATIONS as operationOptions,
 } from '@/common/constants';
+import { OperationType } from '@/common/operation-type.enum';
 import Button from '@/components/Button';
 import {
 	IAnchorOption,
@@ -32,7 +33,14 @@ export default function PlatformForm() {
 		useState<IOperationOption['value']>('deposit');
 
 	const handleContinue = () => {
-		navigate(`/platform/auth?operation=${operation}`);
+		if (
+			operation === OperationType.DEPOSIT.toLowerCase() ||
+			operation === OperationType.WITHDRAW.toLowerCase()
+		) {
+			navigate(`/platform/auth?operation=${operation}`);
+		} else {
+			navigate('/platform/rate');
+		}
 	};
 
 	return (
