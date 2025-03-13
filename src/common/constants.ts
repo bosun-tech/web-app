@@ -1,3 +1,4 @@
+import bosunLogo from '@/assets/logo/bosun.svg';
 import {
 	IAnchorOption,
 	ICountryOption,
@@ -5,6 +6,31 @@ import {
 } from '@/interfaces/platform';
 
 export const PUBLIC_KEY = 'publicKey';
+
+export const ANCLAP_LOGO =
+	'https://home.anclap.com/wp-content/uploads/2023/01/Ico.svg';
+
+export const INTERFACE_OPTIONS = [
+	{
+		title: 'Bosun UI',
+		value: 'bosun-ui',
+		icon: bosunLogo,
+	},
+	{
+		title: 'Anclap UI',
+		value: 'anclap-ui',
+		icon: ANCLAP_LOGO,
+	},
+];
+
+export const ANCHOR_CONFIG = {
+	name: 'Anclap',
+	icon: ANCLAP_LOGO,
+	countries: ['Argentina', 'Chile', 'Colombia', 'Mexico', 'Peru'],
+	cryptoAssets: ['ARS', 'PEN', 'USDC', 'XLM'],
+	fiatAssets: ['$ARS', '$USD'],
+	paymentMethods: ['Cash', 'Card', 'Bank Transfer', 'Local Method'],
+};
 
 export const ANCHORS: IAnchorOption[] = [
 	{
