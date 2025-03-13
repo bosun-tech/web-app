@@ -38,6 +38,8 @@ export default function PlatformForm() {
 			operation === OperationType.WITHDRAW.toLowerCase()
 		) {
 			navigate(`/platform/auth?operation=${operation}`);
+		} else if (operation === OperationType.TRANSACTIONS.toLowerCase()) {
+			navigate('/platform/transactions');
 		} else {
 			navigate('/platform/rate');
 		}

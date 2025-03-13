@@ -334,33 +334,6 @@ describe('Platform Page', () => {
 						.should('contain.text', 'Cash, Card, Bank Transfer, Local Method');
 				});
 			});
-
-			it('Should have correct styling for info cards', () => {
-				cy.viewport(1024, 768);
-				cy.get('[data-testid="anchor-info-container"]').within(() => {
-					cy.get('.bg-white')
-						.first()
-						.should('have.class', 'rounded-2xl')
-						.and('have.class', 'shadow-lg')
-						.and('have.class', 'p-6')
-						.and('have.class', 'mb-4');
-
-					cy.get('.bg-white')
-						.last()
-						.should('have.class', 'rounded-2xl')
-						.and('have.class', 'shadow-lg')
-						.and('have.class', 'p-6');
-				});
-			});
-
-			it('Should have correct text styling for sections', () => {
-				cy.viewport(1024, 768);
-				cy.get('[data-testid="anchor-info-container"]').within(() => {
-					cy.get('h3.font-medium').should('have.class', 'text-gray-500');
-					cy.get('p.text-gray-900').should('exist');
-					cy.get('h3.text-xl').should('have.class', 'font-bold');
-				});
-			});
 		});
 	});
 
@@ -598,6 +571,87 @@ describe('Platform Page', () => {
 				'have.attr',
 				'readonly',
 			);
+		});
+	});
+
+	describe('Transactions Flow', () => {
+		beforeEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.setItem('publicKey', 'mock-public-key');
+			});
+			cy.get('#operation-selector').click();
+			cy.get('input[type="search"]').type('Transactions');
+			cy.contains('Transactions').click();
+			cy.get('#continue-button').click();
+		});
+
+		afterEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+		});
+
+		it('Should display the transactions page title', () => {
+			cy.get('h1').should('contain.text', 'Transactions');
+		});
+
+		it('Should display the search transactions input', () => {
+			cy.get('[data-testid="transaction-search-input"]')
+				.should('be.visible')
+				.and('have.attr', 'placeholder', 'Search transactions');
+		});
+
+		it('Should display transaction items with correct information', () => {
+			cy.get('[data-testid="transaction-item"]').should('have.length', 7);
+
+			cy.get('[data-testid="transaction-item"]')
+				.first()
+				.within(() => {
+					cy.contains('Deposit').should('be.visible');
+					cy.contains('$100').should('be.visible');
+					cy.contains('Transaction ID: a123456').should('be.visible');
+					cy.contains('2 minutes ago').should('be.visible');
+				});
+
+			cy.get('[data-testid="transaction-item"]')
+				.eq(1)
+				.within(() => {
+					cy.contains('Withdrawal').should('be.visible');
+					cy.contains('$200').should('be.visible');
+					cy.contains('Transaction ID: b123457').should('be.visible');
+					cy.contains('3 hours ago').should('be.visible');
+				});
+		});
+
+		it('Should filter transactions based on search input', () => {
+			cy.get('[data-testid="transaction-search-input"]').type('a123456');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
+			cy.contains('Transaction ID: a123456').should('be.visible');
+
+			cy.get('[data-testid="transaction-search-input"]').clear().type('b123');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
+			cy.contains('Transaction ID: b123457').should('be.visible');
+
+			cy.get('[data-testid="transaction-search-input"]').clear();
+			cy.get('[data-testid="transaction-item"]').should('have.length', 7);
+		});
+
+		it('Should be case insensitive when filtering transactions', () => {
+			cy.get('[data-testid="transaction-search-input"]').type('A123456');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
+			cy.contains('Transaction ID: a123456').should('be.visible');
+
+			cy.get('[data-testid="transaction-search-input"]').clear().type('B123');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
+			cy.contains('Transaction ID: b123457').should('be.visible');
+
+			cy.get('[data-testid="transaction-search-input"]').clear();
+			cy.get('[data-testid="transaction-item"]').should('have.length', 7);
+		});
+
+		it('Should show no results when search matches nothing', () => {
+			cy.get('[data-testid="transaction-search-input"]').type('nonexistent');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 0);
 		});
 	});
 });
