@@ -100,12 +100,12 @@ export default function PlatformTransactions() {
 						<div className="flex items-center space-x-4">
 							<div
 								className={`w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 ${
-									transaction.type === OperationType.DEPOSIT.toLowerCase()
+									transaction.type === OperationType.DEPOSIT
 										? 'text-green-600'
 										: 'text-red-600'
 								}`}
 							>
-								{transaction.type === OperationType.DEPOSIT.toLowerCase() ? (
+								{transaction.type === OperationType.DEPOSIT ? (
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -140,7 +140,7 @@ export default function PlatformTransactions() {
 							<div>
 								<div className="flex items-center space-x-2">
 									<span className="font-medium text-gray-900">
-										{transaction.type === OperationType.DEPOSIT.toLowerCase()
+										{transaction.type === OperationType.DEPOSIT
 											? 'Deposit'
 											: 'Withdrawal'}
 									</span>
