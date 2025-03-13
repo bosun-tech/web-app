@@ -535,4 +535,69 @@ describe('Platform Page', () => {
 			});
 		});
 	});
+
+	describe('Rate Converter Flow', () => {
+		beforeEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.setItem('publicKey', 'mock-public-key');
+			});
+			cy.get('#operation-selector').click();
+			cy.get('input[type="search"]').type('Get Rates');
+			cy.contains('Get Rates').click();
+			cy.get('#continue-button').click();
+		});
+
+		afterEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+		});
+
+		it('Should display the rate converter title and form elements', () => {
+			cy.get('h1').should('contain.text', 'Rate Converter');
+			cy.get('h2').first().should('contain.text', 'You send');
+			cy.get('[data-testid="send-amount-input"]').should('have.value', '0.00');
+
+			cy.get('h2').last().should('contain.text', 'You get');
+			cy.get('[data-testid="get-amount-input"]').should('have.value', '0.00');
+
+			cy.get('#get-rate-button')
+				.should('be.visible')
+				.and('have.text', 'Get Rate');
+		});
+
+		it('Should display currency indicators with location icons', () => {
+			cy.get('[data-testid="send-amount-input"]')
+				.parent()
+				.find('svg')
+				.should('be.visible');
+			cy.get('[data-testid="send-amount-input"]')
+				.parent()
+				.find('span')
+				.should('contain.text', 'ARS');
+
+			cy.get('[data-testid="get-amount-input"]')
+				.parent()
+				.find('svg')
+				.should('be.visible');
+			cy.get('[data-testid="get-amount-input"]')
+				.parent()
+				.find('span')
+				.should('contain.text', '$ ARS');
+		});
+
+		it('Should allow input in send amount field', () => {
+			cy.get('[data-testid="send-amount-input"]')
+				.clear()
+				.type('100.50')
+				.should('have.value', '100.50');
+		});
+
+		it('Should have readonly get amount field', () => {
+			cy.get('[data-testid="get-amount-input"]').should(
+				'have.attr',
+				'readonly',
+			);
+		});
+	});
 });
