@@ -3,8 +3,8 @@ import { RouteObject, createBrowserRouter } from 'react-router-dom';
 import RequireAuth from '@/components/auth/RequireAuth';
 import RequirePlatformAuth from '@/components/auth/RequirePlatformAuth';
 import PlatformAuthorization from '@/pages/platform/PlatformAuthorization';
-import PlatformDeposit from '@/pages/platform/PlatformDeposit';
 import PlatformForm from '@/pages/platform/PlatformForm';
+import PlatformOperationForm from '@/pages/platform/PlatformOperationForm';
 
 import Root from '@pages/Root';
 import About from '@pages/about/About';
@@ -20,10 +20,10 @@ const platform: RouteObject[] = [
 		element: <PlatformAuthorization />,
 	},
 	{
-		path: '/platform/deposit',
+		path: '/platform/:operation',
 		element: (
 			<RequirePlatformAuth>
-				<PlatformDeposit />
+				<PlatformOperationForm />
 			</RequirePlatformAuth>
 		),
 	},
