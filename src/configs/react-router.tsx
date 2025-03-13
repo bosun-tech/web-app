@@ -6,6 +6,7 @@ import PlatformAuthorization from '@/pages/platform/PlatformAuthorization';
 import PlatformForm from '@/pages/platform/PlatformForm';
 import PlatformOperationForm from '@/pages/platform/PlatformOperationForm';
 import PlatformRate from '@/pages/platform/PlatformRate';
+import PlatformTransactions from '@/pages/platform/PlatformTransactions';
 
 import Root from '@pages/Root';
 import About from '@pages/about/About';
@@ -31,6 +32,10 @@ const platform: RouteObject[] = [
 	{
 		path: '/platform/rate',
 		element: <PlatformRate />,
+	},
+	{
+		path: '/platform/transactions',
+		element: <PlatformTransactions />,
 	},
 ];
 
