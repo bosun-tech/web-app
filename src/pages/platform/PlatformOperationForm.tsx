@@ -1,47 +1,39 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import bosunLogo from '@/assets/logo/bosun.svg';
+import { ANCHOR_CONFIG, INTERFACE_OPTIONS } from '@/common/constants';
+import { OperationType } from '@/common/operation-type.enum';
 import Button from '@/components/Button';
 import AnchorInfo from '@/components/platform/AnchorInfo';
-import DepositInstructions from '@/components/platform/DepositInstructions';
+import OperationInstructions from '@/components/platform/OperationInstructions';
 import PlatformSelector from '@/components/platform/PlatformSelector';
 
-const DEPOSIT_OPTIONS = [
-	{
-		title: 'Bosun UI',
-		value: 'bosun-ui',
-		icon: bosunLogo,
-	},
-	{
-		title: 'Anclap UI',
-		value: 'anclap-ui',
-		icon: 'https://home.anclap.com/wp-content/uploads/2023/01/Ico.svg',
-	},
-];
+export default function PlatformOperationForm() {
+	const { operation } = useParams<{ operation: string }>();
+	const [isInterfaceOpen, setIsInterfaceOpen] = useState(false);
+	const [interfaceOption, setInterfaceOption] = useState('bosun-ui');
 
-export default function PlatformDeposit() {
-	const [isDepositOpen, setIsDepositOpen] = useState(false);
-	const [depositOption, setDepositOption] = useState('bosun-ui');
 	const [memo, setMemo] = useState('');
 	const [email, setEmail] = useState('');
 	const [publicKey, setPublicKey] = useState('');
 	const [publicKeyError, setPublicKeyError] = useState('');
+
 	const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-	const [showDepositInstructions, setShowDepositInstructions] = useState(false);
+	const [showOperationInstructions, setShowOperationInstructions] =
+		useState(false);
 
-	const anclapLogo =
-		'https://home.anclap.com/wp-content/uploads/2023/01/Ico.svg';
+	const validate = (publicKey: string) => {
+		const publicKeyLength = 56;
 
-	const validatePublicKey = (key: string) => {
-		if (!key) {
+		if (!publicKey) {
 			setPublicKeyError('Public key is required');
 			return false;
 		}
-		if (!key.startsWith('G')) {
+		if (!publicKey.startsWith('G')) {
 			setPublicKeyError('Public key must start with G');
 			return false;
 		}
-		if (key.length !== 56) {
+		if (publicKey.length !== publicKeyLength) {
 			setPublicKeyError('Public key must be 56 characters long');
 			return false;
 		}
@@ -50,10 +42,10 @@ export default function PlatformDeposit() {
 	};
 
 	const handlePublicKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
-		setPublicKey(value);
-		if (value) {
-			validatePublicKey(value);
+		const publicKey = e.target.value;
+		setPublicKey(publicKey);
+		if (publicKey) {
+			validate(publicKey);
 		} else {
 			setPublicKeyError('');
 		}
@@ -64,10 +56,10 @@ export default function PlatformDeposit() {
 	};
 
 	const handleSubmit = () => {
-		if (!validatePublicKey(publicKey)) {
+		if (!validate(publicKey)) {
 			return;
 		}
-		setShowDepositInstructions(true);
+		setShowOperationInstructions(true);
 	};
 
 	return (
@@ -75,32 +67,34 @@ export default function PlatformDeposit() {
 			<div className="w-full min-h-screen flex items-center justify-center md:justify-start">
 				<div
 					className="w-full md:w-1/2 flex flex-col items-center md:items-start md:pl-24"
-					data-testid="deposit-form-container"
+					data-testid="operation-form-container"
 				>
-					{!showDepositInstructions ? (
+					{!showOperationInstructions ? (
 						<>
 							<h1
 								className="mb-8 text-2xl font-extrabold leading-none tracking-tight text-black-900 md:text-5xl lg:text-4xl"
-								data-testid="deposit-title"
+								data-testid="operation-title"
 							>
-								Deposit
+								{operation === OperationType.DEPOSIT.toLowerCase()
+									? OperationType.DEPOSIT
+									: OperationType.WITHDRAW}
 							</h1>
 							<div className="flex flex-col gap-4 w-full max-w-md px-4 md:px-0">
 								<div>
 									<h2 className="block text-sm font-medium text-gray-700 mb-2">
-										What interface do you want to use to deposit?
+										What interface do you want to use to {operation}?
 									</h2>
 									<PlatformSelector
-										id="deposit-interface-selector"
-										open={isDepositOpen}
-										options={DEPOSIT_OPTIONS}
-										onToggle={() => setIsDepositOpen(!isDepositOpen)}
-										onChange={setDepositOption}
-										selectedValue={DEPOSIT_OPTIONS.find(
-											(option) => option.value === depositOption,
+										id={`${operation}-interface-selector`}
+										open={isInterfaceOpen}
+										options={INTERFACE_OPTIONS}
+										onToggle={() => setIsInterfaceOpen(!isInterfaceOpen)}
+										onChange={setInterfaceOption}
+										selectedValue={INTERFACE_OPTIONS.find(
+											(option) => option.value === interfaceOption,
 										)}
 										label=""
-										searchPlaceholder="Search deposit option"
+										searchPlaceholder={`Search ${operation} option`}
 									/>
 								</div>
 
@@ -181,7 +175,7 @@ export default function PlatformDeposit() {
 
 								<div className="mt-4">
 									<Button
-										id="deposit-continue-button"
+										id={`${operation}-continue-button`}
 										label="Continue"
 										width="full"
 										onClick={
@@ -192,7 +186,7 @@ export default function PlatformDeposit() {
 							</div>
 						</>
 					) : (
-						<DepositInstructions
+						<OperationInstructions
 							transactionId="abcd1234efgh5678"
 							estimatedTime="5 minutes"
 							amount={100000}
@@ -200,6 +194,11 @@ export default function PlatformDeposit() {
 								accountNumber: '887765458',
 								bankName: '121122676',
 							}}
+							operationType={
+								operation === OperationType.DEPOSIT.toLowerCase()
+									? OperationType.DEPOSIT
+									: OperationType.WITHDRAW
+							}
 						/>
 					)}
 				</div>
@@ -209,12 +208,12 @@ export default function PlatformDeposit() {
 						data-testid="anchor-info-container"
 					>
 						<AnchorInfo
-							icon={anclapLogo}
-							name="Anclap"
-							countries={['Argentina', 'Chile', 'Colombia', 'Mexico', 'Peru']}
-							cryptoAssets={['ARS', 'PEN', 'USDC', 'XLM']}
-							fiatAssets={['$ARS', '$USD']}
-							paymentMethods={['Cash', 'Card', 'Bank Transfer', 'Local Method']}
+							icon={ANCHOR_CONFIG.icon}
+							name={ANCHOR_CONFIG.name}
+							countries={ANCHOR_CONFIG.countries}
+							cryptoAssets={ANCHOR_CONFIG.cryptoAssets}
+							fiatAssets={ANCHOR_CONFIG.fiatAssets}
+							paymentMethods={ANCHOR_CONFIG.paymentMethods}
 						/>
 					</div>
 				</div>

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import authorizationImage from '@/assets/platform/authorization1.png';
 import Button from '@/components/Button';
@@ -8,10 +8,12 @@ export default function PlatformAuthorization() {
 	const { publicKey: isUserConnected, handleConnect } =
 		useSimpleSignerProvider();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const operation = searchParams.get('operation') || 'deposit';
 
 	const handleGotIt = () => {
 		if (isUserConnected) {
-			navigate('/platform/deposit');
+			navigate(`/platform/${operation}`);
 		} else {
 			handleConnect();
 		}
