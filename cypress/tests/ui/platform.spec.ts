@@ -130,8 +130,11 @@ describe('Platform Page', () => {
 			cy.get('#continue-button').click();
 			cy.get('#got-it-button').click();
 
-			cy.get('[data-testid="deposit-form-container"]').should('be.visible');
-			cy.get('[data-testid="deposit-title"]').should('contain.text', 'Deposit');
+			cy.get('[data-testid="operation-form-container"]').should('be.visible');
+			cy.get('[data-testid="operation-title"]').should(
+				'contain.text',
+				'Deposit',
+			);
 			cy.get('#deposit-interface-selector').should('be.visible');
 		});
 
@@ -175,7 +178,7 @@ describe('Platform Page', () => {
 				'contain.text',
 				'Public key is required',
 			);
-			cy.get('[data-testid="deposit-instructions"]').should('not.exist');
+			cy.get('[data-testid="operation-instructions"]').should('not.exist');
 		});
 
 		it('Should show error when public key does not start with G', () => {
@@ -189,7 +192,7 @@ describe('Platform Page', () => {
 				'Public key must start with G',
 			);
 			cy.get('#deposit-continue-button').click();
-			cy.get('[data-testid="deposit-instructions"]').should('not.exist');
+			cy.get('[data-testid="operation-instructions"]').should('not.exist');
 		});
 
 		it('Should show error when public key is not 56 characters', () => {
@@ -203,7 +206,7 @@ describe('Platform Page', () => {
 				'Public key must be 56 characters long',
 			);
 			cy.get('#deposit-continue-button').click();
-			cy.get('[data-testid="deposit-instructions"]').should('not.exist');
+			cy.get('[data-testid="operation-instructions"]').should('not.exist');
 		});
 
 		it('Should show red border when public key is invalid', () => {
@@ -230,7 +233,7 @@ describe('Platform Page', () => {
 				'border-red-500',
 			);
 			cy.get('#deposit-continue-button').click();
-			cy.get('[data-testid="deposit-instructions"]').should('exist');
+			cy.get('[data-testid="operation-instructions"]').should('exist');
 		});
 
 		describe('Deposit Instructions', () => {
@@ -247,7 +250,7 @@ describe('Platform Page', () => {
 			});
 
 			it('Should display deposit instructions after form submission', () => {
-				cy.get('[data-testid="deposit-instructions"]').should('be.visible');
+				cy.get('[data-testid="operation-instructions"]').should('be.visible');
 				cy.get('[data-testid="instructions-title"]').should(
 					'contain.text',
 					'Deposit Instructions',
@@ -357,6 +360,178 @@ describe('Platform Page', () => {
 					cy.get('p.text-gray-900').should('exist');
 					cy.get('h3.text-xl').should('have.class', 'font-bold');
 				});
+			});
+		});
+	});
+
+	describe('Withdraw Flow', () => {
+		beforeEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.setItem('publicKey', 'mock-public-key');
+			});
+			cy.get('#operation-selector').click();
+			cy.get('input[type="search"]').type('Withdraw');
+			cy.contains('Withdraw').click();
+			cy.get('#continue-button').click();
+			cy.get('#got-it-button').click();
+		});
+
+		afterEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+		});
+
+		it('Should redirect to platform page when not authenticated', () => {
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+			cy.visit('/platform/withdraw');
+			cy.url().should('include', '/platform');
+		});
+
+		it('Should redirect to platform page when user logs out', () => {
+			cy.visit('/platform/withdraw');
+			cy.window().then((win) => {
+				win.localStorage.removeItem('publicKey');
+			});
+			cy.url().should('include', '/platform');
+		});
+
+		it('Should display the initial withdraw form when authenticated', () => {
+			cy.get('[data-testid="operation-form-container"]').should('be.visible');
+			cy.get('[data-testid="operation-title"]').should(
+				'contain.text',
+				'Withdraw',
+			);
+			cy.get('#withdraw-interface-selector').should('be.visible');
+		});
+
+		it('Should show additional fields after clicking continue', () => {
+			cy.get('#withdraw-continue-button').click();
+
+			cy.get('#withdraw-interface-selector').click();
+			cy.get('input[type="search"]').type('Anclap');
+			cy.contains('Anclap UI').click();
+			cy.get('#withdraw-interface-selector').should(
+				'contain.text',
+				'Anclap UI',
+			);
+
+			cy.get('[data-testid="public-key-input"]').type(
+				'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+			);
+			cy.get('[data-testid="public-key-input"]').should(
+				'have.value',
+				'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+			);
+
+			cy.get('[data-testid="memo-input"]').type('Test memo');
+			cy.get('[data-testid="memo-input"]').should('have.value', 'Test memo');
+
+			cy.get('[data-testid="email-input"]').type('test@example.com');
+			cy.get('[data-testid="email-input"]').should(
+				'have.value',
+				'test@example.com',
+			);
+			cy.get('#withdraw-continue-button').click();
+		});
+
+		it('Should show error when public key is empty', () => {
+			cy.get('#withdraw-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').focus().blur();
+			cy.get('#withdraw-continue-button').click();
+			cy.get('[data-testid="public-key-error"]').should(
+				'contain.text',
+				'Public key is required',
+			);
+			cy.get('[data-testid="operation-instructions"]').should('not.exist');
+		});
+
+		it('Should show error when public key does not start with G', () => {
+			cy.get('#withdraw-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('A'.repeat(56));
+			cy.get('[data-testid="public-key-error"]').should(
+				'contain.text',
+				'Public key must start with G',
+			);
+			cy.get('#withdraw-continue-button').click();
+			cy.get('[data-testid="operation-instructions"]').should('not.exist');
+		});
+
+		it('Should show error when public key is not 56 characters', () => {
+			cy.get('#withdraw-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('G'.repeat(55));
+			cy.get('[data-testid="public-key-error"]').should(
+				'contain.text',
+				'Public key must be 56 characters long',
+			);
+			cy.get('#withdraw-continue-button').click();
+			cy.get('[data-testid="operation-instructions"]').should('not.exist');
+		});
+
+		it('Should show red border when public key is invalid', () => {
+			cy.get('#withdraw-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('invalid');
+			cy.get('[data-testid="public-key-input"]').should(
+				'have.class',
+				'border-red-500',
+			);
+		});
+
+		it('Should accept valid public key and allow form submission', () => {
+			cy.get('#withdraw-continue-button').click();
+
+			cy.get('[data-testid="public-key-input"]').type('G'.repeat(56));
+			cy.get('[data-testid="public-key-error"]').should('not.exist');
+			cy.get('[data-testid="public-key-input"]').should(
+				'not.have.class',
+				'border-red-500',
+			);
+			cy.get('#withdraw-continue-button').click();
+			cy.get('[data-testid="operation-instructions"]').should('exist');
+		});
+
+		describe('Withdraw Instructions', () => {
+			beforeEach(() => {
+				cy.get('#withdraw-continue-button').click();
+
+				cy.get('[data-testid="public-key-input"]').type(
+					'GCOVVCPNDXQRGOILIRUTAF3HD2HB35BWMBRGJSQGCECU7WUBSTSFALPA',
+				);
+
+				cy.get('#withdraw-continue-button').click();
+			});
+
+			it('Should display withdraw instructions after form submission', () => {
+				cy.get('[data-testid="operation-instructions"]').should('be.visible');
+				cy.get('[data-testid="instructions-title"]').should(
+					'contain.text',
+					'Withdraw Instructions',
+				);
+
+				cy.get('[data-testid="transaction-id"]').should(
+					'contain.text',
+					'abcd1234efgh5678',
+				);
+				cy.get('[data-testid="estimated-time"]').should(
+					'contain.text',
+					'5 minutes',
+				);
+				cy.get('[data-testid="amount"]').should('contain.text', '100,000');
+
+				cy.get('[data-testid="bank-info"]').should(
+					'contain.text',
+					'Make a payment to Bank: 121122676 Account: 887765458',
+				);
+				cy.get('[data-testid="account-number"]').should(
+					'contain.text',
+					'887765458',
+				);
 			});
 		});
 	});
