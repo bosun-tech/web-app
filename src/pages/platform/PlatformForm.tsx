@@ -20,7 +20,6 @@ export default function PlatformForm() {
 	const [isCountryOpen, setIsCountryOpen] = useState(false);
 	const [isAnchorOpen, setIsAnchorOpen] = useState(false);
 	const [isOperationOpen, setIsOperationOpen] = useState(false);
-	const [showAuthorization, setShowAuthorization] = useState(false);
 	const navigate = useNavigate();
 	const countryOptions: ICountryOption[] = COUNTRIES.map((country) => ({
 		...country,
@@ -48,11 +47,7 @@ export default function PlatformForm() {
 	return (
 		<div className="md:px-[10%] xl:px-[10%]">
 			<div className="w-full min-h-screen flex items-center justify-center md:justify-start">
-				<div
-					className={`w-full ${
-						showAuthorization ? '' : 'md:w-1/2'
-					} flex flex-col items-center md:items-start md:pl-24`}
-				>
+				<div className="w-full md:w-1/2 flex flex-col items-center md:items-start md:pl-24">
 					<h1 className="mb-8 text-2xl font-extrabold leading-none tracking-tight text-black-900 md:text-5xl lg:text-4xl">
 						Platform
 					</h1>
