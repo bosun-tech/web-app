@@ -2,6 +2,7 @@ import { RouteObject, createBrowserRouter } from 'react-router-dom';
 
 import RequireAuth from '@/components/auth/RequireAuth';
 import RequirePlatformAuth from '@/components/auth/RequirePlatformAuth';
+import PlatformTransactionDetails from '@/components/platform/PlatformTransactionDetails';
 import PlatformAuthorization from '@/pages/platform/PlatformAuthorization';
 import PlatformForm from '@/pages/platform/PlatformForm';
 import PlatformOperationForm from '@/pages/platform/PlatformOperationForm';
@@ -36,6 +37,10 @@ const platform: RouteObject[] = [
 	{
 		path: '/platform/transactions',
 		element: <PlatformTransactions />,
+	},
+	{
+		path: '/platform/transactions/:id',
+		element: <PlatformTransactionDetails />,
 	},
 ];
 

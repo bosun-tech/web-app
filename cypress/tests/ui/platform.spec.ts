@@ -343,7 +343,7 @@ describe('Platform Page', () => {
 				win.localStorage.setItem('publicKey', 'mock-public-key');
 			});
 			cy.get('#operation-selector').click();
-			cy.get('input[type="search"]').type('Withdraw');
+			cy.get('#operation-selector').type('Withdraw');
 			cy.contains('Withdraw').click();
 			cy.get('#continue-button').click();
 			cy.get('#got-it-button').click();
@@ -609,7 +609,7 @@ describe('Platform Page', () => {
 				.within(() => {
 					cy.contains('Deposit').should('be.visible');
 					cy.contains('$100').should('be.visible');
-					cy.contains('Transaction ID: a123456').should('be.visible');
+					cy.contains('Transaction ID: 7KJ9FJ4').should('be.visible');
 					cy.contains('2 minutes ago').should('be.visible');
 				});
 
@@ -624,9 +624,9 @@ describe('Platform Page', () => {
 		});
 
 		it('Should filter transactions based on search input', () => {
-			cy.get('[data-testid="transaction-search-input"]').type('a123456');
+			cy.get('[data-testid="transaction-search-input"]').type('7KJ9FJ4');
 			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
-			cy.contains('Transaction ID: a123456').should('be.visible');
+			cy.contains('Transaction ID: 7KJ9FJ4').should('be.visible');
 
 			cy.get('[data-testid="transaction-search-input"]').clear().type('b123');
 			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
@@ -637,9 +637,9 @@ describe('Platform Page', () => {
 		});
 
 		it('Should be case insensitive when filtering transactions', () => {
-			cy.get('[data-testid="transaction-search-input"]').type('A123456');
+			cy.get('[data-testid="transaction-search-input"]').type('7KJ9FJ4');
 			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
-			cy.contains('Transaction ID: a123456').should('be.visible');
+			cy.contains('Transaction ID: 7KJ9FJ4').should('be.visible');
 
 			cy.get('[data-testid="transaction-search-input"]').clear().type('B123');
 			cy.get('[data-testid="transaction-item"]').should('have.length', 1);
@@ -652,6 +652,84 @@ describe('Platform Page', () => {
 		it('Should show no results when search matches nothing', () => {
 			cy.get('[data-testid="transaction-search-input"]').type('nonexistent');
 			cy.get('[data-testid="transaction-item"]').should('have.length', 0);
+		});
+	});
+	describe('Transaction Details', () => {
+		beforeEach(() => {
+			cy.window().then((win) => {
+				win.localStorage.setItem('publicKey', 'mock-public-key');
+			});
+			cy.get('#operation-selector').click();
+			cy.get('input[type="search"]').type('Transactions');
+			cy.contains('Transactions').click();
+			cy.get('#continue-button').click();
+			cy.get('[data-testid="transaction-item"]').first().click();
+		});
+
+		it('Should navigate to transaction details page when clicking a transaction', () => {
+			cy.url().should('include', '/platform/transactions/7KJ9FJ4');
+		});
+
+		it('Should display transaction details page title and back button', () => {
+			cy.contains('Transaction Details').should('be.visible');
+			cy.contains('← Back').should('be.visible');
+		});
+
+		it('Should display transaction with 7KJ9FJ4 ID correctly', () => {
+			cy.contains('Transaction ID: 7KJ9FJ4').should('be.visible');
+		});
+
+		it('Should display basic transaction information', () => {
+			cy.contains('Kind').should('be.visible');
+			cy.contains('Deposit').should('be.visible');
+			cy.contains('2/28/2025').should('be.visible');
+
+			cy.contains('Status').should('be.visible');
+			cy.contains('completed').should('be.visible');
+			cy.get('.text-green-600').should('be.visible');
+		});
+
+		it('Should display external transaction ID with copy button', () => {
+			cy.contains('External transaction ID').should('be.visible');
+			cy.contains('JDJFIW9S').should('be.visible');
+			cy.get('button').find('svg').should('be.visible');
+		});
+
+		it('Should display amounts section with correct values', () => {
+			cy.contains('Amounts').should('be.visible');
+
+			cy.contains('Amount In').should('be.visible');
+			cy.contains('$1000.00').should('be.visible');
+
+			cy.contains('Amount Out').should('be.visible');
+			cy.contains('$980.00').should('be.visible');
+
+			cy.contains('Fees').should('be.visible');
+			cy.contains('$20.00').should('be.visible');
+		});
+
+		it('Should navigate back to transactions list when clicking back button', () => {
+			cy.contains('← Back').click();
+			cy.url().should('not.include', '/7KJ9FJ4');
+			cy.contains('Transactions').should('be.visible');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 7);
+		});
+
+		it('Should show not found page for invalid transaction ID', () => {
+			cy.visit('/platform/transactions/invalid-id');
+			cy.contains('Transaction Not Found').should('be.visible');
+			cy.contains('The transaction you are looking for does not exist').should(
+				'be.visible',
+			);
+			cy.contains('← Back').should('be.visible');
+		});
+
+		it('Should navigate back from not found page', () => {
+			cy.visit('/platform/transactions/invalid-id');
+			cy.contains('← Back').click();
+			cy.url().should('not.include', '/invalid-id');
+			cy.contains('Transactions').should('be.visible');
+			cy.get('[data-testid="transaction-item"]').should('have.length', 7);
 		});
 	});
 });
