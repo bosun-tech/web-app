@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 import { ISelectOption } from '@/interfaces/platform';
@@ -97,9 +97,8 @@ export default function PlatformSelector<T extends ISelectOption>({
 						</svg>
 					</span>
 				</button>
-
-				<AnimatePresence>
-					{open && (
+				{open && (
+					<AnimatePresence>
 						<motion.ul
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
@@ -188,8 +187,8 @@ export default function PlatformSelector<T extends ISelectOption>({
 								)}
 							</div>
 						</motion.ul>
-					)}
-				</AnimatePresence>
+					</AnimatePresence>
+				)}
 			</div>
 		</div>
 	);
