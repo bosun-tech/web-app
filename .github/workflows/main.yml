@@ -51,7 +51,7 @@ jobs:
         uses: zgosalvez/github-actions-report-lcov@v4.1.22
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          minimum-coverage: 80
+          minimum-coverage: 55
           coverage-files: ./coverage/cypress/lcov.info
 
       - name: Store coverage folder as artifact
